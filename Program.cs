@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,17 +10,56 @@ namespace test_1
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void AnzeigeMenu()
         {
+            Console.Clear();
             Console.WriteLine("Womit wollen Sie rechnen?");
             Console.WriteLine("1:(+)");
             Console.WriteLine("2:(-)");
             Console.WriteLine("3:(*)");
             Console.WriteLine("4:(/)");
             Console.WriteLine("0:(Programm beenden)");
-
-            while (true)
+        }
+        static double BerechneErgebnis(int operation, double num1, double num2)
+        {
+            Console.Clear();
+            switch (operation)
             {
+                case 1: // Addition
+                    Console.WriteLine($"Berechnung: {num1}+{num2}");
+                    return num1 + num2;
+
+                case 2: // Subtraktion
+                    Console.WriteLine($"Berechnung: {num1}-{num2}");
+                    return num1 - num2;
+
+                case 3: // Multiplikation
+                    Console.WriteLine($"Berechnung: {num1}*{num2}");
+                    return num1 * num2;
+
+                case 4: // Division
+                    Console.WriteLine($"Berechnung: {num1}/{num2}");
+                    if (num2 != 0)
+                    {
+                        return num1 / num2;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Division durch Null ist nicht erlaubt.");
+                        return double.NaN; // NaN als Fehlerwert
+                    }
+
+                default:
+                    return double.NaN; // Unbekannte Operation
+            }
+        }
+        static void Main(string[] args)
+        {
+            string antwort = "j";
+            while (antwort == "j")
+            {
+                AnzeigeMenu();
+
                 string userInput = Console.ReadLine();
                 int operation;
 
@@ -33,57 +73,49 @@ namespace test_1
 
                     else if (operation >= 1 && operation <= 4)
                     {
-                        Console.WriteLine("Geben Sie Ihre erste Zahl ein: ");
-                        int num1 = int.Parse(Console.ReadLine()); //Eingabe der ersten Rechnungsnummer
-                        Console.WriteLine("Geben Sie Ihre zweite Zahl ein: ");
-                        int num2 = int.Parse(Console.ReadLine()); //Eingabe der zweiten Rechnungsnummer
-                        
-                        Console.Clear(); //macht sauber
-
-                        switch (operation)
+                        Console.WriteLine("Geben Sie die erste Zahl ein: ");
+                        double num1;
+                        if (double.TryParse(Console.ReadLine(), out num1))
                         {
-                            case 1: //Plusberechnung 
-                                Console.WriteLine("Rechnung: {0}+{1}", num1, num2);//Rechnung
-                                Console.WriteLine("Ergebnis = " + (num1 + num2)); //Ergebnis
-                                break;
-
-                            case 2: //Minusberechnung
-                                Console.WriteLine("Rechnung: {0}-{1}", num1, num2);//Rechnung
-                                Console.WriteLine("Ergebnis = " + (num1 - num2)); //Ergebnis
-                                break;
-
-                            case 3: //Malberechnung
-                                Console.WriteLine("Rechnung: {0}*{1}", num1, num2);//Rechnung
-                                Console.WriteLine("Ergebnis = " + (num1 * num2)); //Ergebnis
-                                break;
-
-                            case 4: //Geteiltberechnung
-                                Console.WriteLine("Rechnung: {0}/{1}", num1, num2);//Rechnung
-                                if (num2 != 0)
+                            Console.WriteLine("Geben Sie die zweite Zahl ein: ");
+                            double num2;
+                            if (double.TryParse(Console.ReadLine(), out num2))
+                            {
+                                double ergebnis = BerechneErgebnis(operation, num1, num2);
+                                if (!double.IsNaN(ergebnis))
                                 {
-                                    Console.WriteLine("Ergebnis = " + ((double)num1 / num2)); //Ergebnis
+                                    Console.WriteLine($"Ergebnis = {ergebnis}");
                                 }
-                                else
-                                {
-                                    Console.WriteLine("Division durch Null ist nicht erlaubt.");
-                                }
-                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Ungültige Eingabe für die zweite Zahl.");
+                            }
                         }
-                        
+                        else
+                        {
+                            Console.WriteLine("Ungültige Eingabe für die erste Zahl.");
+                        }
                     }
                     else
-                    {   // Ausgabe wenn man eine falsche Eingabe getätigt hat
-                        Console.WriteLine("Ungültige Eingabe. Wählen Sie eine der verfügbaren Optionen.");
+                    {
+                        Console.WriteLine("UNGÜLTIGE EINGABE!!! WÄHLEN SIE EINE DER VERFÜGBAREN OPTIONEN!!!");
                     }
                 }
                 else
-                {   // Ausgabe wenn man eine ungültige Zahl eingegeben hat
-                    Console.WriteLine("Ungültige Eingabe. Bitte geben Sie eine Zahl ein.");
+                {
+                    Console.WriteLine("UNGÜLTIGE EINGABE!!! WÄHLEN SIE EINE DER VERFÜGBAREN OPTIONEN!!!");
                 }
+
+                Console.WriteLine("\nWollen Sie neu starten?");
+                Console.WriteLine("\t (j/n)");
+                antwort = Console.ReadLine();
+
+
             }
 
 
-
         }
+        
     }
 }
